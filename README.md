@@ -1,5 +1,5 @@
 ## Run Backup
-    ruby sweety_backy.rb configuration_file.yml
+    ruby sweety_backy_execute.rb configuration_file.yml
     
 ## Configuration file
 ### includes

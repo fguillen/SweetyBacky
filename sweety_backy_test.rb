@@ -1,5 +1,3 @@
-require 'rubygems'
-require 'tmpdir'
 require 'test/unit'
 require 'mocha'
 require 'delorean'

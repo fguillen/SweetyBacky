@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'fileutils'
+require 'tmpdir'
 require File.dirname(__FILE__) + "/utils.rb"
 
 class SweetyBacky
@@ -25,6 +26,8 @@ class SweetyBacky
   end
   
   def do_files_backup( includes, excludes, path )
+    puts "doing files backup"
+    
     FileUtils.mkdir_p( File.dirname( path ) )
     exclude_file_path = File.join( Dir::tmpdir, "#{Time.now.to_i}_exclude.txt" )
     File.open( exclude_file_path, 'w' ) { |f| f.write excludes.join("\n") }
@@ -32,6 +35,8 @@ class SweetyBacky
   end
   
   def do_databases_backup( databases, database_user, database_pass, path )
+    puts "doing databases backup"
+    
     FileUtils.mkdir_p( File.dirname( path ) )
     tmp_sql_file_path = File.join( Dir::tmpdir, "#{File.basename( path, '.tar.gz' )}" )
     database_pass = (database_pass=='') ? '' : "-p#{database_pass}"
@@ -40,6 +45,8 @@ class SweetyBacky
   end
   
   def clear( yearly, monthly, weekly, daily, path )
+    puts "cleaning"
+    
     opts = {:yearly => yearly, :monthly => monthly, :weekly => weekly, :daily => daily}
     
     opts.keys.each do |block|
@@ -56,6 +63,7 @@ class SweetyBacky
   
   def run( conf_path )
     opts = Utils::read_opts( conf_path )
+    puts "configuration: #{opts.inspect}"
   
     do_backup( opts['includes'], opts['excludes'], opts['databases'], opts['database_user'], opts['database_pass'], opts['path'] )
     clear( opts['yearly'], opts['monthly'], opts['weekly'], opts['daily'], opts['path'] )

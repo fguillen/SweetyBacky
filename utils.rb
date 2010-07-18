@@ -17,6 +17,7 @@ class Utils
   end
   
   def self.read_opts( conf_path )
+    puts "conf_path: #{conf_path}"
     raw_config = File.read( conf_path )
     opts = YAML.load(raw_config)
     
