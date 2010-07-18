@@ -1,0 +1,10 @@
+includes: ['/tmp/a', '/tmp/b']
+excludes: ['/tmp/a/exclude', '.cvs*']
+databases: ['application1_db', 'application2_db']
+database_user: root
+database_pass: pass
+path: '/tmp/backup'
+yearly: 2
+monthly: 12
+weekly: 4
+daily: 7
