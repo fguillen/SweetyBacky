@@ -21,6 +21,12 @@ class Utils
     raw_config = File.read( conf_path )
     opts = YAML.load(raw_config)
     
+    # symbolize keys
+    opts.keys.each do |key|
+      opts[key.to_sym] = opts.delete(key)
+    end
+    
+    
     # TODO: test all options are ok
     
     return opts

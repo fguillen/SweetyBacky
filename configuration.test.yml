@@ -1,10 +1,12 @@
-includes: ['/tmp/a', '/tmp/b']
-excludes: ['/tmp/a/exclude', '.cvs*']
+includes: [ "#tmp_dir#/to_back" ]
+excludes: [ "#tmp_dir#/to_back/b", "#tmp_dir#/to_back/c", "*exclude*" ]
 databases: ['information_schema']
 database_user: root
-database_pass: pass
-path: '/tmp/backup'
-yearly: 2
-monthly: 12
-weekly: 4
-daily: 7
+database_pass: 
+path: '#tmp_dir#'
+yearly: 1
+monthly: 4
+weekly: 2
+daily: 5
+tar_path: '/sw/bin/tar'
+mysqldump_path: '/opt/mysql/bin//mysqldump'

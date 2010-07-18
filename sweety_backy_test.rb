@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'test/unit'
 require 'mocha'
 require 'delorean'
@@ -17,23 +18,22 @@ class SweetyBackyTest < Test::Unit::TestCase
     end
     File.open( @tmp_dir + "/to_back/a/exclude.txt", 'w' ) { |f| f.write 'wadus' }
     
-    # parameters
-    @includes = [ "#{@tmp_dir}/to_back" ]
-    @excludes = [ "#{@tmp_dir}/to_back/b", "#{@tmp_dir}/to_back/c", "*exclude*" ]
-    @databases = ['information_schema']
-    @database_user = 'root'
-    @database_pass = ''
+    # configuration file
+    File.open( File.dirname(__FILE__) + "/configuration.test.tmp.yml", 'w' ) do |f|
+      f.write File.read( File.dirname(__FILE__) + "/configuration.test.yml" ).gsub( "#tmp_dir#", @tmp_dir )
+    end    
     
     # SweetyBacky
-    @sb = SweetyBacky.new
+    @sb = SweetyBacky.new( File.dirname(__FILE__) + "/configuration.test.tmp.yml" )
   end
   
   def teardown
     FileUtils.rm_rf @tmp_dir  if File.exists?(@tmp_dir)
+    File.delete( File.dirname(__FILE__) + "/configuration.test.tmp.yml" )  if File.exists?( File.dirname(__FILE__) + "/configuration.test.tmp.yml" )
   end
   
   def test_do_files_backup
-    @sb.do_files_backup( @includes, @excludes, "#{@tmp_dir}/back.tar.gz" )
+    @sb.do_files_backup( "#{@tmp_dir}/back.tar.gz" )
     
     result = %x(tar -tzvf #{@tmp_dir}/back.tar.gz)
     
@@ -45,7 +45,7 @@ class SweetyBackyTest < Test::Unit::TestCase
   end
   
   def test_do_databases_backup
-    @sb.do_databases_backup( @databases, 'root', '', "#{@tmp_dir}/back.sql.tar.gz" )
+    @sb.do_databases_backup( "#{@tmp_dir}/back.sql.tar.gz" )
     
     result = %x(tar -tzvf #{@tmp_dir}/back.sql.tar.gz)
     assert_match( /\sback.sql$/, result )
@@ -53,7 +53,7 @@ class SweetyBackyTest < Test::Unit::TestCase
   
   def test_do_backup_yearly
     Delorean.time_travel_to( '2009-12-31' ) do
-      @sb.do_backup( @includes, @excludes, @databases, @database_user, @database_pass, @tmp_dir )
+      @sb.do_backup
     end
     
     assert( File.exists?( "#{@tmp_dir}/files/20091231.yearly.tar.gz") )
@@ -62,7 +62,7 @@ class SweetyBackyTest < Test::Unit::TestCase
   
   def test_do_backup_monthly    
     Delorean.time_travel_to( '2010-01-31' ) do
-      @sb.do_backup( @includes, @excludes, @databases, @database_user, @database_pass, @tmp_dir )
+      @sb.do_backup
     end
     
     assert( File.exists?( "#{@tmp_dir}/files/20100131.monthly.tar.gz") )
@@ -71,7 +71,7 @@ class SweetyBackyTest < Test::Unit::TestCase
   
   def test_do_backup_weekly    
     Delorean.time_travel_to( '2010-01-03' ) do
-      @sb.do_backup( @includes, @excludes, @databases, @database_user, @database_pass, @tmp_dir )
+      @sb.do_backup
     end
     
     assert( File.exists?( "#{@tmp_dir}/files/20100103.weekly.tar.gz") )
@@ -80,7 +80,7 @@ class SweetyBackyTest < Test::Unit::TestCase
   
   def test_do_backup_daily
     Delorean.time_travel_to( '2010-01-04' ) do
-      @sb.do_backup( @includes, @excludes, @databases, @database_user, @database_pass, @tmp_dir )
+      @sb.do_backup
     end
     
     assert( File.exists?( "#{@tmp_dir}/files/20100104.daily.tar.gz") )
@@ -118,7 +118,7 @@ class SweetyBackyTest < Test::Unit::TestCase
     # puts @tmp_dir
     # exit 1
     
-    @sb.clear( 1, 4, 2, 5, @tmp_dir )
+    @sb.clear
     
     files_keeped = Dir.glob( "#{@tmp_dir}/files/*" ).join( "\n" )
     databases_keeped = Dir.glob( "#{@tmp_dir}/databases/*" ).join( "\n" )
@@ -157,18 +157,9 @@ class SweetyBackyTest < Test::Unit::TestCase
   end
   
   def test_run
-    @sb.expects(:do_backup).with( 
-      ['/tmp/a', '/tmp/b'], 
-      ['/tmp/a/exclude', '.cvs*'],
-      ['information_schema'],
-      'root',
-      'pass',
-      '/tmp/backup'
-    )
-
-    @sb.expects(:clear).with( 2, 12, 4, 7, '/tmp/backup' )
-    
-    @sb.run( File.dirname(__FILE__) + "/configuration.test.yml" )
+    @sb.expects(:do_backup)
+    @sb.expects(:clear)
+    @sb.run
   end
 
     

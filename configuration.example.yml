@@ -8,3 +8,5 @@ yearly: 2
 monthly: 12
 weekly: 4
 daily: 7
+tar_path: '/bin/tar'
+mysqldump_path: '/usr/bin/mysqldump'
