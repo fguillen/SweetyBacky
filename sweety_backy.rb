@@ -66,8 +66,8 @@ class SweetyBacky
 
   
   def run
-    do_backup( @opts[:includes], @opts[:excludes], @opts[:databases], @opts[:database_user], @opts[:database_pass], @opts[:tar_path], @opts[:mysqldump_path], @opts[:path] )
-    clear( @opts[:yearly], @opts[:monthly], @opts[:weekly], @opts[:daily], @opts[:path] )
+    do_backup
+    clear
   end
   
   

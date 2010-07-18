@@ -8,8 +8,8 @@ end
 
 lapsus_time = 
   Benchmark.realtime do
-    sb = SweetyBacky.new
-    sb.run( ARGV[0] )
+    sb = SweetyBacky.new( ARGV[0] )
+    sb.run
   end
 
 puts "SweetyBacky on #{lapsus_time}"
