@@ -44,7 +44,7 @@ class SweetyBacky
     
     FileUtils.mkdir_p( File.dirname( path ) )
     tmp_sql_file_path = File.join( Dir::tmpdir, "#{File.basename( path, '.tar.gz' )}" )
-    database_pass = (@opts[:database_pass].nil? || @opts[:database_pass]=='') ? '' : "-p#{@opts[:database_pass]}"
+    database_pass = (@opts[:database_pass].nil? || @opts[:database_pass]=='') ? '' : "-p'#{@opts[:database_pass]}'"
     Utils::command( "#{@opts[:mysqldump_path]} -u#{@opts[:database_user]} #{database_pass} --databases #{@opts[:databases].join(' ')} > #{tmp_sql_file_path}" )
     Utils::command( "#{@opts[:tar_path]} -cz --same-permissions --file #{path} --directory #{File.dirname(tmp_sql_file_path)} #{File.basename(tmp_sql_file_path)}" )
   end
