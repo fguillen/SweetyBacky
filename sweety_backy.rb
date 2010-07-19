@@ -7,7 +7,6 @@ class SweetyBacky
   
   def initialize( conf_path )
     @opts = Utils::read_opts( conf_path )
-    puts "configuration: #{@opts.inspect}"
   end
   
   def do_backup
@@ -32,7 +31,7 @@ class SweetyBacky
   end
   
   def do_files_backup( path )
-    puts "doing files backup"
+    Utils::log "doing files backup"
     
     FileUtils.mkdir_p( File.dirname( path ) )
     exclude_file_path = File.join( Dir::tmpdir, "#{Time.now.to_i}_exclude.txt" )
@@ -41,7 +40,7 @@ class SweetyBacky
   end
   
   def do_databases_backup( path )
-    puts "doing databases backup"
+    Utils::log "doing databases backup"
     
     FileUtils.mkdir_p( File.dirname( path ) )
     tmp_sql_file_path = File.join( Dir::tmpdir, "#{File.basename( path, '.tar.gz' )}" )
@@ -51,7 +50,7 @@ class SweetyBacky
   end
   
   def clear
-    puts "cleaning"
+    Utils::log "cleaning"
     
     [:yearly, :monthly, :weekly, :daily].each do |block|
       Dir.glob( "#{@opts[:path]}/files/*.#{block.to_s}.*" ).sort[0..(-1*(@opts[block]+1))].each do |file_path|
@@ -64,12 +63,15 @@ class SweetyBacky
     end
   end
 
-  
   def run
-    do_backup
-    clear
+    begin
+      do_backup
+      clear
+    rescue => e
+      Utils::log "ERROR: #{e}"
+      Utils::log "I should send and email at this moment"
+    end
   end
-  
   
 
 end

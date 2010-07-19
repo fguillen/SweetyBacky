@@ -13,11 +13,15 @@ class Utils
   
   def self.command( _command )
     # puts "command: #{_command}"
-    %x( #{_command} )
+    result = %x( #{_command} 2>&1 )
+    
+    raise "ERROR: on command: '#{_command}', result: '#{result}'"  if $?.exitstatus != 0
+    
+    return result
   end
   
   def self.read_opts( conf_path )
-    puts "conf_path: #{conf_path}"
+    Utils::log "conf_path: #{conf_path}"
     raw_config = File.read( conf_path )
     opts = YAML.load(raw_config)
     
@@ -27,8 +31,19 @@ class Utils
     end
     
     
+    Utils::log "configuration:"
+    Utils::log "------------"
+    opts.each_pair do |key, value|
+      Utils::log "#{key}: #{(value.instance_of? Array) ? value.join(' | ') : value}"
+    end
+    
+    
     # TODO: test all options are ok
     
     return opts
+  end
+  
+  def self.log( msg )
+    puts "#{Time.now.strftime("%Y-%m-%d %H:%M")}: #{msg}"
   end
 end

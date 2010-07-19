@@ -7,6 +7,10 @@ require File.dirname(__FILE__) + "/sweety_backy.rb"
 class SweetyBackyTest < Test::Unit::TestCase
   
   def setup
+    # Moching log
+    Utils.stubs(:log)
+    
+    # tmp dir
     @tmp_dir = File.join( Dir::tmpdir, "sweety_backy_#{Time.now.to_i}" )
     Dir.mkdir( @tmp_dir )
     
@@ -160,6 +164,12 @@ class SweetyBackyTest < Test::Unit::TestCase
     @sb.expects(:do_backup)
     @sb.expects(:clear)
     @sb.run
+  end
+  
+  def test_error_on_command
+    assert_raise RuntimeError do
+      Utils::command( 'command_not_exists' )
+    end
   end
 
     
