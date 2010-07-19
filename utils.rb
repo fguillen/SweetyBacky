@@ -12,7 +12,7 @@ class Utils
   end
   
   def self.command( _command )
-    # puts "command: #{_command}"
+    Utils::log "command: #{_command}"
     result = %x( #{_command} 2>&1 )
     
     raise "ERROR: on command: '#{_command}', result: '#{result}'"  if $?.exitstatus != 0

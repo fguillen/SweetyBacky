@@ -41,6 +41,8 @@ class SweetyBackyTest < Test::Unit::TestCase
     
     result = %x(tar -tzvf #{@tmp_dir}/back.tar.gz)
     
+    puts result
+    
     assert_match( "to_back/a/wadus.txt", result )
     assert_match( "to_back/d/wadus.txt", result )
     assert_no_match(/to_back\/b\/wadus.txt/, result ) 
