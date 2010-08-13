@@ -1,6 +1,6 @@
 includes: [ "#tmp_dir#/to_back" ]
 excludes: [ "#tmp_dir#/to_back/b", "#tmp_dir#/to_back/c", "*exclude*" ]
-databases: ['information_schema']
+databases: ['test']
 database_user: root
 database_pass: 
 path: '#tmp_dir#'
@@ -8,5 +8,5 @@ yearly: 1
 monthly: 4
 weekly: 2
 daily: 5
-tar_path: '/sw/bin/tar'
-mysqldump_path: '/opt/mysql/bin//mysqldump'
+tar_path: '/usr/bin/tar'
+mysqldump_path: '/usr/local/bin/mysqldump'

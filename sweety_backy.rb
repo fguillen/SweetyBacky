@@ -38,6 +38,7 @@ class SweetyBacky
     exclude_file_path = File.join( Dir::tmpdir, "#{Time.now.to_i}_exclude.txt" )
     File.open( exclude_file_path, 'w' ) { |f| f.write @opts[:excludes].join("\n") }
     Utils::command( "#{@opts[:tar_path]} -cz --same-permissions --file #{path} --exclude-from #{exclude_file_path} #{@opts[:includes].join(' ')}" )
+    File.delete( exclude_file_path )
   end
   
   def do_databases_backup( path )
@@ -48,6 +49,7 @@ class SweetyBacky
     database_pass = (@opts[:database_pass].nil? || @opts[:database_pass]=='') ? '' : "-p'#{@opts[:database_pass]}'"
     Utils::command( "#{@opts[:mysqldump_path]} -u#{@opts[:database_user]} #{database_pass} --databases #{@opts[:databases].join(' ')} > #{tmp_sql_file_path}" )
     Utils::command( "#{@opts[:tar_path]} -cz --same-permissions --file #{path} --directory #{File.dirname(tmp_sql_file_path)} #{File.basename(tmp_sql_file_path)}" )
+    File.delete( tmp_sql_file_path )
   end
   
   def clear
