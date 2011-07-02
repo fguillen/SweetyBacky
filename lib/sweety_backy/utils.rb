@@ -38,25 +38,5 @@ module SweetyBacky
       path.gsub('/', '.').gsub(/^\./, '')
     end
     
-    def self.read_opts( conf_path )
-      SweetyBacky::Utils::log "conf_path: #{conf_path}"
-
-      opts = YAML.load( File.read( conf_path ) )
-      
-      # symbolize keys
-      opts.keys.each do |key|
-        opts[key.to_sym] = opts.delete(key)
-      end
-
-      SweetyBacky::Utils::log "configuration:"
-      SweetyBacky::Utils::log "------------"
-      opts.each_pair do |key, value|
-        SweetyBacky::Utils::log "#{key}: #{(value.instance_of? Array) ? value.join(' | ') : value}"
-      end
-
-      # TODO: test all options are ok
-
-      return opts
-    end
   end
 end

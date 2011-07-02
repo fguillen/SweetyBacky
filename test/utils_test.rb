@@ -21,19 +21,4 @@ class UtilsTest < Test::Unit::TestCase
     assert_equal( 'path', SweetyBacky::Utils.namerize( 'path' ) )
   end
   
-  def test_read_opts
-    opts = SweetyBacky::Utils.read_opts( "#{FIXTURES_PATH}/config.yml" )
-    
-    assert_equal( [ "path1", "path2" ], opts[:paths] )
-    assert_equal( [ "db1", "db2" ], opts[:databases] )
-    assert_equal( 1, opts[:yearly] )
-    assert_equal( 2, opts[:monthly] )
-    assert_equal( 3, opts[:weekly] )
-    assert_equal( 4, opts[:daily] )
-    assert_equal( '/backup_path', opts[:backup_path] )
-    assert_equal( 'database_user', opts[:database_user] )
-    assert_equal( 'database_pass', opts[:database_pass] )
-  end
-  
-  
 end

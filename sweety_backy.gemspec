@@ -8,14 +8,16 @@ Gem::Specification.new do |s|
   s.authors     = ["Fernando Guillen"]
   s.email       = ["fguillen.mail@gmail.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = "Ruby backup mechanism"
+  s.description = "Simple mechanism to configure and execute backups of folders and MySQL DBs and store them in local folder or S3 bucket"
 
   s.rubyforge_project = "SweetyBacky"
   
   s.add_development_dependency "bundler", ">= 1.0.0.rc.6"
   s.add_development_dependency "mocha"
   s.add_development_dependency "delorean"
+  
+  s.add_dependency "s3"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

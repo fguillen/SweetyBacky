@@ -1,9 +1,19 @@
+#!/usr/bin/env ruby
+
+# Use:
+#     sweety_backy /path/to/sweety_backy.conf
+
+begin
+  require 'sweety_backy'
+rescue LoadError
+  require 'rubygems'
+  require 'sweety_backy'
+end
+
 require 'benchmark'
-# require 'sweety_backy'
-require File.dirname(__FILE__) + "/../lib/sweety_backy"
 
 if( ARGV[0].nil? )
-  SweetyBacky::Utils.log "use: $ ruby sweety_backy.rb <config_file_path>"
+  SweetyBacky::Utils.log "use: $ sweety_backy <config_file_path>"
   exit 1
 end
 

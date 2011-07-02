@@ -1,9 +1,0 @@
-paths: [ "path1", "path2" ]
-databases: [ "db1", "db2" ]
-yearly: 1
-monthly: 2
-weekly: 3
-daily: 4
-backup_path: '/backup_path'
-database_user: 'database_user'
-database_pass: 'database_pass'

@@ -1,0 +1,13 @@
+paths: [ "path1", "path2" ]
+databases: [ "db1", "db2" ]
+yearly: 1
+monthly: 2
+weekly: 3
+daily: 4
+database_user: 'database_user'
+database_pass: 'database_pass'
+storage_system: 's3'
+s3_opts: 
+  bucket: 'bucket_name'
+  path: 's3/path/path'
+  passwd_file: '/path/.s3.passwd'

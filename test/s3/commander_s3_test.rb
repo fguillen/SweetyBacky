@@ -1,68 +1,37 @@
-require "#{File.dirname(__FILE__)}/test_helper"
+require "#{File.dirname(__FILE__)}/../test_helper"
 
-class CommanderTest < Test::Unit::TestCase
+class CommanderS3Test < Test::Unit::TestCase
   
   def setup
     SweetyBacky::Utils.stubs(:log)
-    
-    # tmp dir
-    @tmp_dir = File.join( Dir::tmpdir, "sweety_backy_#{Time.now.to_i}" )
-    Dir.mkdir( @tmp_dir )  unless File.exists?(@tmp_dir)
-  end
-  
-  def teardown
-    FileUtils.rm_rf @tmp_dir  if File.exists?(@tmp_dir)
-  end
-  
-  def test_do_files_backup
-    SweetyBacky::Commander.do_files_backup( 
-      "#{FIXTURES_PATH}/path", 
-      "#{@tmp_dir}/back.tar.gz",
-      {}
-    )
-    
-    result = %x(tar -tzvf #{@tmp_dir}/back.tar.gz)
 
-    assert_match( "./", result )
-    assert_match( "./file1.txt", result )
-    assert_match( "./a/", result )
-    assert_match( "./b/file3.txt", result )
-  end
-  
-  def test_do_databases_backup
-    SweetyBacky::Commander.do_database_backup( 
-      "test",  
-      "#{@tmp_dir}/back.sql.tar.gz",
-      {
-        :database_user => "test", 
-        :database_pass => ""
-      }
-    )
-    
-    result = %x(tar -tzvf #{@tmp_dir}/back.sql.tar.gz)
-    
-    assert_match( /\sback.sql$/, result )
-  end
-
-  
-  def test_clear
-    opts = {
+    @opts = {
       :paths        => [ 'name1', 'name2' ],
       :databases    => [ 'name1', 'name2' ],
       :yearly       => 1,
       :monthly      => 2,
       :weekly       => 3,
       :daily        => 4,
-      :storage_system => :local,
-      :local_opts => {
-        :path => @tmp_dir
+      :storage_system => :s3,
+      :s3_opts => {
+        :bucket       => 'sweety_backy_test',
+        :path         => 'test/path',
+        :passwd_file  => '~/.s3.passwd'
       },
       :working_path => @tmp_dir
     }
     
-    Dir.mkdir( "#{@tmp_dir}/files" )  unless File.exists?( "#{@tmp_dir}/files" )
-    Dir.mkdir( "#{@tmp_dir}/databases" )  unless File.exists?( "#{@tmp_dir}/databases" )
-    
+    s3 = ::S3::Service.new( SweetyBacky::S3.read_s3_password( @opts[:s3_opts][:passwd_file] ) )
+        
+    @bucket = s3.buckets.build( @opts[:s3_opts][:bucket] )
+    @bucket.save
+  end
+
+  def teardown
+    @bucket.destroy( true )
+  end
+
+  def test_clear    
     [
       'name1.20081231.yearly',
       'name1.20081232.yearly',
@@ -84,17 +53,14 @@ class CommanderTest < Test::Unit::TestCase
       'name2.20100724.daily',
       'name2.20100726.daily'
     ].each do |file_part|
-      File.open( "#{@tmp_dir}/files/#{file_part}.tar.gz", 'w' ) { |f| f.write 'wadus' }
-      File.open( "#{@tmp_dir}/databases/#{file_part}.sql.tar.gz", 'w' ) { |f| f.write 'wadus' }
+      SweetyBacky::S3.upload( "#{FIXTURES_PATH}/file.txt", "#{@opts[:s3_opts][:path]}/files/#{file_part}.tar.gz", @opts[:s3_opts] )
+      SweetyBacky::S3.upload( "#{FIXTURES_PATH}/file.txt", "#{@opts[:s3_opts][:path]}/databases/#{file_part}.sql.tar.gz", @opts[:s3_opts] )
     end
     
-    # puts @tmp_dir
-    # exit 1
+    SweetyBacky::Commander.clear( @opts )
     
-    SweetyBacky::Commander.clear( opts )
-    
-    files_keeped = Dir.glob( "#{@tmp_dir}/files/*" ).join( "\n" )
-    databases_keeped = Dir.glob( "#{@tmp_dir}/databases/*" ).join( "\n" )
+    files_keeped = SweetyBacky::S3.paths_in( "#{@opts[:s3_opts][:path]}/files/*", @opts[:s3_opts] ).join( "\n" )
+    databases_keeped = SweetyBacky::S3.paths_in( "#{@opts[:s3_opts][:path]}/databases/*", @opts[:s3_opts] ).join( "\n" )
     
     # files to keep
     [

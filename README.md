@@ -1,86 +1,121 @@
-## Run Backup
-    ruby sweety_backy_execute.rb configuration_file.yml
+# Sweety Backy
+
+Simple mechanism to **configure and execute backups** of folders and MySQL DBs and store them in **local folder** or **S3 bucket**.
+
+## State
+
+This is a **really beta** version which is working in my servers actually without problems but you have to use it under your own risk.
+
+## Other possibilities
+
+Please take a look of other **Ruby backups gems**:
+
+* http://ruby-toolbox.com/categories/backups.html
+
+## How install
+
+    gem install 'sweety_backy'
     
-## Configuration file
-### includes
-Array of folders to make a backup.
-
-Example:
-    includes: ['/var/www', '/var/log']
-
-### excludes
-Array of patterns to exclude from backup.
-
-Example:
-    excludes: ['/var/www/tmp', '.cvs']
+## How to use it
     
-### path
-Root Path for the backups
-
-Example: 
-    path: '/backups'
+    sweety_backy <config_file>
     
-### yearly, monhtly, weekly, daily
-Number of yearly, monhtly, weekly, daily backups to keep, starting for the most recent.
+### Config file
 
-Example:
-    yearly: 2
-    monthly: 12
-    weekly: 4
-    daily: 7
+It is a _yaml_ file with all this attributes
 
-
-## Destination Folders
-
-As example for date 2010-06-29 with configuration: 
-
-    include: '/tmp/hhh'
-    exclude: '/tmp/hhh/xxx'
-    path: '/tmp/backups'
-    years: 2
-    months: 6
-    weeks: 4
-    days: 7
+    paths: <array of folder paths>
+    databases: <array of database names>
+    yearly: <quantity of yearly backups>
+    monthly: <quantity of monthly backups>
+    weekly: <quantity of weekly backups>
+    daily: <quantity of daily backups>
+    database_user: <database user with read privileges of all datases>
+    database_pass: <database user password>
+    storage_system: { 's3' | 'local' }
+    local_opts: (only if the storage_system is 'local')
+      path: <absoulte path to the root folder of the backups>
+    s3_opts: (only if the storage_system is 's3')
+      bucket: <bucket name>
+      path: <bucket path where the backups will be stored><
+      passwd_file: <path to the S3 credentials>
     
-The files folder will look like this:
+### S3 credentials file
 
-    /tmp/backups/files/20081231.yearly.tar.gz
-    /tmp/backups/files/20091231.yearly.tar.gz
-    /tmp/backups/files/20100131.monthly.tar.gz
-    /tmp/backups/files/20100228.monthly.tar.gz
-    /tmp/backups/files/20100331.monthly.tar.gz
-    /tmp/backups/files/20100430.monthly.tar.gz
-    /tmp/backups/files/20100531.monthly.tar.gz
-    /tmp/backups/files/20100606.weekly.tar.gz
-    /tmp/backups/files/20100613.weekly.tar.gz
-    /tmp/backups/files/20100620.weekly.tar.gz
-    /tmp/backups/files/20100627.weekly.tar.gz
-    /tmp/backups/files/20100623.daily.tar.gz
-    /tmp/backups/files/20100624.daily.tar.gz
-    /tmp/backups/files/20100625.daily.tar.gz
-    /tmp/backups/files/20100626.daily.tar.gz
-    /tmp/backups/files/20100627.weekly.tar.gz
-    /tmp/backups/files/20100628.daily.tar.gz
-    /tmp/backups/files/20100629.daily.tar.gz
+It is a _yaml_ file with two keys with the S3 credentials:
+
+    access_key_id: "XXX"
+    secret_access_key: "YYY"
     
-The databases folder will look like this:
+### Example
+
+#### S3 config example
+
+    # ~/.s3.passwd
+    access_key_id: "XXX"
+    secret_access_key: "YYY"
+
+
+#### SweetyBacky config example    
+
+    # ~/.sweety_backy.conf
+    paths: [ "/Users/fguillen/Develop/Brico", "/Users/fguillen/Develop/Arduino" ]
+    databases: [ "test", "mysql" ]
+    yearly: 1
+    monthly: 2
+    weekly: 3
+    daily: 4
+    database_user: 'root'
+    database_pass: ''
+    storage_system: 's3'
+    s3_opts: 
+      bucket: 'sweety_backy'
+      path: 'fguillen'
+      passwd_file: '~/.s3.passwd'
+      
+#### Execute
+
+    sweety_backy ~/.sweety_backy.conf
     
-    /tmp/backups/databases/20081231.yearly.sql.tar.gz
-    /tmp/backups/databases/20091231.yearly.sql.tar.gz
-    /tmp/backups/databases/20100131.monthly.sql.tar.gz
-    /tmp/backups/databases/20100228.monthly.sql.tar.gz
-    /tmp/backups/databases/20100331.monthly.sql.tar.gz
-    /tmp/backups/databases/20100430.monthly.sql.tar.gz
-    /tmp/backups/databases/20100531.monthly.sql.tar.gz
-    /tmp/backups/databases/20100606.weekly.sql.tar.gz
-    /tmp/backups/databases/20100613.weekly.sql.tar.gz
-    /tmp/backups/databases/20100620.weekly.sql.tar.gz
-    /tmp/backups/databases/20100627.weekly.sql.tar.gz
-    /tmp/backups/databases/20100623.daily.sql.tar.gz
-    /tmp/backups/databases/20100624.daily.sql.tar.gz
-    /tmp/backups/databases/20100625.daily.sql.tar.gz
-    /tmp/backups/databases/20100626.daily.sql.tar.gz
-    /tmp/backups/databases/20100627.weekly.sql.tar.gz
-    /tmp/backups/databases/20100628.daily.sql.tar.gz
-    /tmp/backups/databases/20100629.daily.sql.tar.gz
+#### Result
+
+This will generate a bunch of backups in the _sweety_backy_ bucket like these ones:
+
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110626.weekly.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110703.weekly.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110704.daily.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110705.daily.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110706.daily.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110707.daily.tar.gz
+
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110626.weekly.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110703.weekly.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110704.daily.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110705.daily.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110706.daily.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110707.daily.tar.gz
+
+    https://s3.amazonaws.com/sweety_backy/fguillen/databases/test.20110626.weekly.sql.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/databases/test.20110703.weekly.sql.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/databases/test.20110704.daily.sql.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/databases/test.20110705.daily.sql.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/databases/test.20110706.daily.sql.tar.gz    
+    https://s3.amazonaws.com/sweety_backy/fguillen/databases/test.20110707.daily.sql.tar.gz
+
+    https://s3.amazonaws.com/sweety_backy/fguillen/databases/mysql.20110626.weekly.sql.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/databases/mysql.20110703.weekly.sql.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/databases/mysql.20110704.daily.sql.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/databases/mysql.20110705.daily.sql.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/databases/mysql.20110706.daily.sql.tar.gz    
+    https://s3.amazonaws.com/sweety_backy/fguillen/databases/mysql.20110707.daily.sql.tar.gz
     
+... and so on.
+
+### Cron execution example
+    
+    # every day at 02:00 am
+    00 02 * * * sweety_backy /home/fguillen/.sweety_backy.conf >> /var/log/sweety_backy.log 2>&1
+
+## License
+
+MIT License. (c) 2011 Fernando Guillen (http://fernandoguillen.info).

@@ -4,10 +4,10 @@ class RunnerTest < Test::Unit::TestCase
   
   def setup
     SweetyBacky::Utils.stubs(:log)
-    
+
     # tmp dir
     @tmp_dir = File.join( Dir::tmpdir, "sweety_backy_#{Time.now.to_i}" )
-    Dir.mkdir( @tmp_dir )
+    Dir.mkdir( @tmp_dir )  unless File.exists?(@tmp_dir)
     
     # runner
     @opts = {
@@ -17,9 +17,12 @@ class RunnerTest < Test::Unit::TestCase
       :monthly        => 1,
       :weekly         => 2,
       :daily          => 4,
-      :backup_path    => @tmp_dir,
       :database_user  => 'test',
-      :database_pass  => ''
+      :database_pass  => '',
+      :storage_system => :local,
+      :local_opts     => {
+        :path => @tmp_dir
+      }
     }
     
     @runner = SweetyBacky::Runner.new
@@ -74,17 +77,25 @@ class RunnerTest < Test::Unit::TestCase
   end
   
   def test_initialize_with_config_file
-    runner = SweetyBacky::Runner.new( "#{FIXTURES_PATH}/config.yml" )
+    SweetyBacky::OptsReader.expects( :read_opts ).with( '/path/config.yml' ).returns( 
+      { 
+        :paths => [ 'pepe', 'juan' ],
+        :local_opts => {
+          :path => '/local/path'
+        }
+      }
+    )
     
-    assert_equal( [ "path1", "path2" ], runner.opts[:paths] )
-    assert_equal( [ "db1", "db2" ], runner.opts[:databases] )
+    runner = SweetyBacky::Runner.new( "/path/config.yml" )
+    
+    assert_equal( [ "pepe", "juan" ], runner.opts[:paths] )
+    assert_equal( [], runner.opts[:databases] )
     assert_equal( 1, runner.opts[:yearly] )
-    assert_equal( 2, runner.opts[:monthly] )
-    assert_equal( 3, runner.opts[:weekly] )
+    assert_equal( 1, runner.opts[:monthly] )
+    assert_equal( 2, runner.opts[:weekly] )
     assert_equal( 4, runner.opts[:daily] )
-    assert_equal( '/backup_path', runner.opts[:backup_path] )
-    assert_equal( 'database_user', runner.opts[:database_user] )
-    assert_equal( 'database_pass', runner.opts[:database_pass] )
+    assert_equal( :local, runner.opts[:storage_system] )
+    assert_equal( '/local/path', runner.opts[:local_opts][:path] )
   end
     
 end
