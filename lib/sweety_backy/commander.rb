@@ -15,7 +15,7 @@ module SweetyBacky
       
       database_pass = opts[:database_pass].empty? ? '' : "-p#{opts[:database_pass]}"
       
-      SweetyBacky::Utils::command( "mysqldump -u#{opts[:database_user]} #{opts[:database_pass]} #{database_name} > #{tmp_sql_file_path}" )
+      SweetyBacky::Utils::command( "mysqldump -u#{opts[:database_user]} #{database_pass} #{database_name} > #{tmp_sql_file_path}" )
       SweetyBacky::Utils::command( "tar -cz --same-permissions --file #{backup_path} --directory #{File.dirname(tmp_sql_file_path)} #{File.basename(tmp_sql_file_path)}" )
       
       File.delete( tmp_sql_file_path )
