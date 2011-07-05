@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = SweetyBacky::VERSION
   s.authors     = ["Fernando Guillen"]
   s.email       = ["fguillen.mail@gmail.com"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/fguillen/SweetyBacky"
   s.summary     = "Ruby backup mechanism"
   s.description = "Simple mechanism to configure and execute backups of folders and MySQL DBs and store them in local folder or S3 bucket"
 
