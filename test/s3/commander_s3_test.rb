@@ -31,7 +31,7 @@ class CommanderS3Test < Test::Unit::TestCase
     @bucket.destroy( true )
   end
 
-  def test_clear    
+  def test_clean    
     [
       'name1.20081231.yearly',
       'name1.20081232.yearly',
@@ -57,7 +57,7 @@ class CommanderS3Test < Test::Unit::TestCase
       SweetyBacky::S3.upload( "#{FIXTURES_PATH}/file.txt", "#{@opts[:s3_opts][:path]}/databases/#{file_part}.sql.tar.gz", @opts[:s3_opts] )
     end
     
-    SweetyBacky::Commander.clear( @opts )
+    SweetyBacky::Commander.clean( @opts )
     
     files_keeped = SweetyBacky::S3.paths_in( "#{@opts[:s3_opts][:path]}/files/*", @opts[:s3_opts] ).join( "\n" )
     databases_keeped = SweetyBacky::S3.paths_in( "#{@opts[:s3_opts][:path]}/databases/*", @opts[:s3_opts] ).join( "\n" )

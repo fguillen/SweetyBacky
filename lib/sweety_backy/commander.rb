@@ -21,12 +21,12 @@ module SweetyBacky
       File.delete( tmp_sql_file_path )
     end
 
-    def self.clear( opts )
-      clear_files( opts )
-      clear_databases( opts )
+    def self.clean( opts )
+      clean_files( opts )
+      clean_databases( opts )
     end
   
-    def self.clear_files( opts )
+    def self.clean_files( opts )
       SweetyBacky::Utils.log "cleaning files on #{opts[:working_path]}/files/"
       
       opts[:paths].each do |path|
@@ -44,7 +44,7 @@ module SweetyBacky
       end
     end
     
-    def self.clear_databases( opts )
+    def self.clean_databases( opts )
       SweetyBacky::Utils.log "cleaning databases on #{opts[:working_path]}/databases/"
       
       opts[:databases].each do |database_name|

@@ -45,7 +45,7 @@ class CommanderTest < Test::Unit::TestCase
   end
 
   
-  def test_clear
+  def test_clean
     opts = {
       :paths        => [ 'name1', 'name2' ],
       :databases    => [ 'name1', 'name2' ],
@@ -91,7 +91,7 @@ class CommanderTest < Test::Unit::TestCase
     # puts @tmp_dir
     # exit 1
     
-    SweetyBacky::Commander.clear( opts )
+    SweetyBacky::Commander.clean( opts )
     
     files_keeped = Dir.glob( "#{@tmp_dir}/files/*" ).join( "\n" )
     databases_keeped = Dir.glob( "#{@tmp_dir}/databases/*" ).join( "\n" )

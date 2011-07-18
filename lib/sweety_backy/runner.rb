@@ -71,10 +71,14 @@ module SweetyBacky
       end
     end
     
+    def clean
+      SweetyBacky::Commander.clean( @opts )
+    end
+    
     def run
       begin
         do_backup
-        SweetyBacky::Commander.clear( @opts )
+        clean
       rescue => e
         SweetyBacky::Utils.log "ERROR: #{e}"
         SweetyBacky::Utils.log "BACKTRACE: #{e.backtrace.join("\n")}"
