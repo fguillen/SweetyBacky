@@ -85,7 +85,7 @@ module SweetyBacky
           success = true
           
         rescue Exception => e
-          Utils.log( "ERROR: backing up file: '#{path}', e: #{e.message}" )
+          Utils.log( "ERROR: backing up database: '#{database_name}', e: #{e.message}" )
           Utils.log( e.backtrace.join("\n") )
           
           success = false
