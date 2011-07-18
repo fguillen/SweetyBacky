@@ -74,6 +74,7 @@ class RunnerTest < Test::Unit::TestCase
 
   def test_run
     @runner.expects(:do_backup)
+    @runner.expects(:print_results)
     SweetyBacky::Commander.expects(:clean)
     
     @runner.run
