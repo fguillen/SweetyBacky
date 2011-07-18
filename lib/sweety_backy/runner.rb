@@ -40,7 +40,9 @@ module SweetyBacky
     def do_files_backup
       @opts[:paths].each do |path|
         backup_path = "#{@opts[:working_path]}/files/#{SweetyBacky::Utils.namerize( path )}.#{Date.today.strftime('%Y%m%d')}.#{SweetyBacky::Utils.period}.tar.gz"
-        SweetyBacky::Commander.do_files_backup( path, backup_path, @opts )
+        md5_path    = "#{backup_path}.md5"
+        SweetyBacky::Commander.do_files_backup( path, backup_path )
+        SweetyBacky::Commander.do_md5( backup_path, md5_path )
         
         if( @opts[:storage_system].to_sym == :s3 )
           SweetyBacky::S3.upload(
@@ -49,7 +51,14 @@ module SweetyBacky
             @opts[:s3_opts]
           )
           
-          FileUtils.rm_rf backup_path
+          SweetyBacky::S3.upload(
+            md5_path,
+            "#{@opts[:s3_opts][:path]}/files/#{File.basename( md5_path )}",
+            @opts[:s3_opts]
+          )
+          
+          FileUtils.rm backup_path
+          FileUtils.rm md5_path
         end
       end
     end
@@ -57,7 +66,9 @@ module SweetyBacky
     def do_databases_backup
       @opts[:databases].each do |database_name|
         backup_path = "#{@opts[:working_path]}/databases/#{database_name}.#{Date.today.strftime('%Y%m%d')}.#{SweetyBacky::Utils.period}.sql.tar.gz"
+        md5_path    = "#{backup_path}.md5"
         SweetyBacky::Commander.do_database_backup( database_name, backup_path, @opts)
+        SweetyBacky::Commander.do_md5( backup_path, md5_path )
         
         if( @opts[:storage_system].to_sym == :s3 )
           SweetyBacky::S3.upload(
@@ -66,7 +77,14 @@ module SweetyBacky
             @opts[:s3_opts]
           )
           
-          FileUtils.rm_rf backup_path
+          SweetyBacky::S3.upload(
+            backup_path,
+            "#{@opts[:s3_opts][:path]}/databases/#{File.basename( md5_path )}",
+            @opts[:s3_opts]
+          )
+          
+          FileUtils.rm backup_path
+          FileUtils.rm md5_path
         end
       end
     end

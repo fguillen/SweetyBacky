@@ -53,6 +53,20 @@ class RunnerS3Test < Test::Unit::TestCase
           "test/path/databases/test.#{Date.today.strftime('%Y%m%d')}.daily.sql.tar.gz"
         ).exists? 
     )
+    
+    assert( 
+      @bucket.
+        object( 
+          "test/path/files/#{SweetyBacky::Utils.namerize( @opts[:paths][0] )}.#{Date.today.strftime('%Y%m%d')}.daily.tar.gz.md5"
+        ).exists? 
+    )
+    
+    assert( 
+      @bucket.
+        object( 
+          "test/path/databases/test.#{Date.today.strftime('%Y%m%d')}.daily.sql.tar.gz.md5"
+        ).exists? 
+    )
   end
     
 end

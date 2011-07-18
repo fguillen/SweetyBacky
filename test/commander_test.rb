@@ -17,8 +17,7 @@ class CommanderTest < Test::Unit::TestCase
   def test_do_files_backup
     SweetyBacky::Commander.do_files_backup( 
       "#{FIXTURES_PATH}/path", 
-      "#{@tmp_dir}/back.tar.gz",
-      {}
+      "#{@tmp_dir}/back.tar.gz"
     )
     
     result = %x(tar -tzvf #{@tmp_dir}/back.tar.gz)
@@ -128,7 +127,15 @@ class CommanderTest < Test::Unit::TestCase
       assert_no_match( /#{file_part}.sql.tar.gz/, databases_keeped )
     end
   end
-
+  
+  def test_do_md5
+    md5_path = "#{@tmp_dir}/#{Time.now.to_i}.md5"
+    fixture_file_path = "#{FIXTURES_PATH}/file_for_md5.txt"
     
+    md5 = SweetyBacky::Commander.do_md5( fixture_file_path, md5_path )
+    
+    assert_equal( '75fca8d37b0f7d75d11ccc8d255debe5', md5 )
+    assert_equal( '75fca8d37b0f7d75d11ccc8d255debe5', File.read( md5_path ) )
+  end
 end
 

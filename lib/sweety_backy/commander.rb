@@ -1,6 +1,6 @@
 module SweetyBacky
   module Commander    
-    def self.do_files_backup( path, backup_path, opts )
+    def self.do_files_backup( path, backup_path )
       SweetyBacky::Utils.log "doing files backup of #{path} to #{backup_path}"
     
       FileUtils.mkdir_p( File.dirname( backup_path ) )
@@ -14,7 +14,7 @@ module SweetyBacky
       tmp_sql_file_path = File.join( Dir::tmpdir, "#{File.basename( backup_path, '.tar.gz' )}" )
       
       database_pass = opts[:database_pass].empty? ? '' : "-p#{opts[:database_pass]}"
-      
+
       SweetyBacky::Utils::command( "mysqldump -u#{opts[:database_user]} #{database_pass} #{database_name} > #{tmp_sql_file_path}" )
       SweetyBacky::Utils::command( "tar -cz --same-permissions --file #{backup_path} --directory #{File.dirname(tmp_sql_file_path)} #{File.basename(tmp_sql_file_path)}" )
       
@@ -78,5 +78,11 @@ module SweetyBacky
       end
     end
     
+    def self.do_md5( path, md5_path )
+      digest = Digest::MD5.hexdigest( File.read( path ) )
+      File.open( md5_path, 'w' ) { |f| f.write digest }
+      
+      return digest
+    end
   end
 end

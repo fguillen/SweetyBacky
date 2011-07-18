@@ -1,5 +1,6 @@
 require 'rubygems'
 require "s3"
+require 'digest/md5'
 
 require "#{File.dirname(__FILE__)}/sweety_backy/version"
 require "#{File.dirname(__FILE__)}/sweety_backy/runner"

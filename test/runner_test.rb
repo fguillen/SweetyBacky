@@ -38,8 +38,11 @@ class RunnerTest < Test::Unit::TestCase
       @runner.do_backup
     end
     
-    assert( File.exists?( "#{@tmp_dir}/files/#{SweetyBacky::Utils.namerize( @opts[:paths][0] )}.20091231.yearly.tar.gz") )
-    assert( File.exists?( "#{@tmp_dir}/databases/test.20091231.yearly.sql.tar.gz") )
+    assert( File.exists?( "#{@tmp_dir}/files/#{SweetyBacky::Utils.namerize( @opts[:paths][0] )}.20091231.yearly.tar.gz" ) )
+    assert( File.exists?( "#{@tmp_dir}/databases/test.20091231.yearly.sql.tar.gz" ) )
+
+    assert( File.exists?( "#{@tmp_dir}/files/#{SweetyBacky::Utils.namerize( @opts[:paths][0] )}.20091231.yearly.tar.gz.md5" ) )
+    assert( File.exists?( "#{@tmp_dir}/databases/test.20091231.yearly.sql.tar.gz.md5" ) )
   end
   
   def test_do_backup_monthly    

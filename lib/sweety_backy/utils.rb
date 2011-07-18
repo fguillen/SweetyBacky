@@ -23,7 +23,7 @@ module SweetyBacky
     def self.command( _command )
       Utils.log "command: #{_command}"
       
-      result = %x( #{_command} 2>&1 )
+      result = %x( #{_command} )
     
       raise "ERROR: on command: '#{_command}', result: '#{result}'"  if $?.exitstatus != 0
     
