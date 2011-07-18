@@ -51,7 +51,7 @@ module SweetyBacky
           SweetyBacky::Commander.do_md5( backup_path, md5_path )
         
           if( @opts[:storage_system].to_sym == :s3 )
-            upload_databases_backup_to_s3( backup_path, md5_path )
+            upload_files_backup_to_s3( backup_path, md5_path )
           end
           
           success = true
