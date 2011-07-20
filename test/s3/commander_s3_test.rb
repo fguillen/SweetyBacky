@@ -12,7 +12,7 @@ class CommanderS3Test < Test::Unit::TestCase
       :monthly      => 2,
       :weekly       => 3,
       :daily        => 4,
-      :storage_system => :s3,
+      :storage_system => 's3',
       :s3_opts => {
         :bucket       => 'sweety_backy_test',
         :path         => 'test/path',

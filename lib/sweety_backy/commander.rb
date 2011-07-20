@@ -13,7 +13,7 @@ module SweetyBacky
       FileUtils.mkdir_p( File.dirname( backup_path ) )
       tmp_sql_file_path = File.join( Dir::tmpdir, "#{File.basename( backup_path, '.tar.gz' )}" )
       
-      database_pass = opts[:database_pass].empty? ? '' : "-p#{opts[:database_pass]}"
+      database_pass = opts[:database_pass].empty? ? '' : "-p'#{opts[:database_pass]}'"
 
       SweetyBacky::Utils::command( "mysqldump -u#{opts[:database_user]} #{database_pass} #{database_name} > #{tmp_sql_file_path}" )
       SweetyBacky::Utils::command( "tar -cz --same-permissions --file #{backup_path} --directory #{File.dirname(tmp_sql_file_path)} #{File.basename(tmp_sql_file_path)}" )
@@ -34,10 +34,9 @@ module SweetyBacky
         
         [:yearly, :monthly, :weekly, :daily].each do |period|
           paths_in( 
-            "#{opts[:working_path]}/files/#{SweetyBacky::Utils.namerize( path )}.*.#{period.to_s}.*",
+            "#{opts[:working_path]}/files/#{SweetyBacky::Utils.namerize( path )}.*.#{period.to_s}.tar.gz",
             opts
           ).sort[0..(-1*(opts[period]+1))].each do |file_path|
-            SweetyBacky::Utils.log "removing: #{file_path}"
             remove_path( file_path, opts )
           end      
         end
@@ -52,10 +51,9 @@ module SweetyBacky
         
         [:yearly, :monthly, :weekly, :daily].each do |period|
           paths_in( 
-            "#{opts[:working_path]}/databases/#{database_name}.*.#{period.to_s}.*",
+            "#{opts[:working_path]}/databases/#{database_name}.*.#{period.to_s}.sql.tar.gz",
             opts
           ).sort[0..(-1*(opts[period]+1))].each do |file_path|
-            SweetyBacky::Utils.log "removing: #{file_path}"
             remove_path( file_path, opts )
           end      
         end
@@ -72,8 +70,10 @@ module SweetyBacky
     
     def self.remove_path( path, opts )
       if( opts[:storage_system].to_sym == :s3 )
+        SweetyBacky::Utils.log "cleaning: removing #{opts[:s3_opts][:bucket]}/#{path}"
         SweetyBacky::S3.delete( path, opts[:s3_opts] )
       else
+        SweetyBacky::Utils.log "cleaning: removing #{path}"
         File.delete( path )
       end
     end
