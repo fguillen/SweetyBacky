@@ -1,5 +1,10 @@
-require 'rubygems'
-require "s3"
+begin
+  require 's3'
+rescue LoadError
+  require 'rubygems'
+  require 's3'
+end
+
 require 'digest/md5'
 
 require "#{File.dirname(__FILE__)}/sweety_backy/version"
