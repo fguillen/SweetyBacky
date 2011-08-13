@@ -46,7 +46,6 @@ module SweetyBacky
         md5_path    = "#{backup_path}.md5"
         
         begin
-
           SweetyBacky::Commander.do_files_backup( path, backup_path )
           SweetyBacky::Commander.do_md5( backup_path, md5_path )
         
@@ -132,7 +131,7 @@ module SweetyBacky
       )
     
       SweetyBacky::S3.upload(
-        backup_path,
+        md5_path,
         "#{@opts[:s3_opts][:path]}/databases/#{File.basename( md5_path )}",
         @opts[:s3_opts]
       )
