@@ -1,0 +1,27 @@
+PATH
+  remote: .
+  specs:
+    sweety_backy (0.0.13)
+      s3
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    chronic (0.6.2)
+    delorean (1.1.0)
+      chronic
+    mocha (0.9.12)
+    proxies (0.2.1)
+    rake (0.9.2)
+    s3 (0.3.8)
+      proxies (~> 0.2.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler (>= 1.0.0.rc.6)
+  delorean
+  mocha
+  rake
+  sweety_backy!
