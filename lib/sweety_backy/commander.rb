@@ -79,10 +79,17 @@ module SweetyBacky
     end
     
     def self.do_md5( path, md5_path )
-      digest = Digest::MD5.hexdigest( File.read( path ) )
-      File.open( md5_path, 'w' ) { |f| f.write digest }
+      digest = Digest::MD5.new();
       
-      return digest
+      File.open( path, 'r' ) do |f|
+        f.each_line { |line| digest << line }
+      end
+
+      result = digest.hexdigest
+      
+      File.open( md5_path, 'w' ) { |f| f.write result }
+      
+      return result
     end
   end
 end
