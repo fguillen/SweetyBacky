@@ -1,8 +1,8 @@
 begin
-  require 's3'
+  require 'aws-sdk'
 rescue LoadError
   require 'rubygems'
-  require 's3'
+  require 'aws-sdk'
 end
 
 require 'digest/md5'

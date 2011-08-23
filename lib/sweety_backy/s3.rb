@@ -1,32 +1,30 @@
 module SweetyBacky
   class S3
-    def self.upload( path, backup_path, opts )
-      SweetyBacky::Utils.log( "S3 uploading: #{path} to #{opts[:bucket]}/#{backup_path}" )
+    def self.upload( path, s3_path, opts )
+      SweetyBacky::Utils.log( "S3 uploading: #{path} to #{opts[:bucket]}/#{s3_path}" )
       
-      s3 = ::S3::Service.new( read_s3_password( opts[:passwd_file] ) )
-      bucket = s3.bucket( opts[:bucket] )
+      s3 = AWS::S3.new( read_s3_password( opts[:passwd_file] ) )
+      bucket = s3.buckets[ opts[:bucket] ]
       
       if !bucket.exists?
-        bucket = s3.buckets.build( opts[:bucket] )
-        bucket.save
+        bucket = s3.buckets.create( opts[:bucket] )
       end
 
-      object = bucket.objects.build( backup_path )
-      object.content = File.open( path )
-      object.save
+      object = bucket.objects.create( s3_path )
+      object.write( :file => path )
     end
     
     def self.object( path, opts )
-      s3 = ::S3::Service.new( read_s3_password( opts[:passwd_file] ) )
-      bucket = s3.buckets.find( opts[:bucket] )
-      object = bucket.objects.find( path )
+      s3 = AWS::S3.new( read_s3_password( opts[:passwd_file] ) )
+      bucket = s3.buckets[ opts[:bucket] ]
+      object = bucket.objects[ path ]
       
-      return object
+      object
     end
     
     def self.paths_in( path, opts )
-      s3 = ::S3::Service.new( read_s3_password( opts[:passwd_file] ) )
-      bucket = s3.buckets.find( opts[:bucket] )
+      s3 = AWS::S3.new( read_s3_password( opts[:passwd_file] ) )
+      bucket = s3.buckets[ opts[:bucket] ]
       
       regex = Regexp.escape( path ).gsub('\*', '.*').gsub('\?', '.')
       
@@ -49,7 +47,7 @@ module SweetyBacky
     end
     
     def self.delete( path, opts )
-      SweetyBacky::S3.object( path, opts ).destroy
+      SweetyBacky::S3.object( path, opts ).delete
     end
     
   end

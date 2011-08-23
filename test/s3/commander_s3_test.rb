@@ -21,14 +21,13 @@ class CommanderS3Test < Test::Unit::TestCase
       :working_path => @tmp_dir
     }
     
-    s3 = ::S3::Service.new( SweetyBacky::S3.read_s3_password( @opts[:s3_opts][:passwd_file] ) )
+    s3 = AWS::S3.new( SweetyBacky::S3.read_s3_password( @opts[:s3_opts][:passwd_file] ) )
         
-    @bucket = s3.buckets.build( @opts[:s3_opts][:bucket] )
-    @bucket.save
+    @bucket = s3.buckets.create( @opts[:s3_opts][:bucket] )
   end
 
   def teardown
-    @bucket.destroy( true )
+    @bucket.delete!
   end
 
   def test_clean    

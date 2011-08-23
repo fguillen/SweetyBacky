@@ -11,13 +11,12 @@ class S3Test < Test::Unit::TestCase
       :passwd_file        => '~/.s3.passwd'
     }
     
-    s3 = ::S3::Service.new( SweetyBacky::S3.read_s3_password( @opts[:passwd_file] ) )
-    @bucket = s3.buckets.build( @opts[:bucket] )
-    @bucket.save
+    s3 = AWS::S3.new( SweetyBacky::S3.read_s3_password( @opts[:passwd_file] ) )
+    @bucket = s3.buckets.create( @opts[:bucket] )
   end
   
   def teardown
-    @bucket.destroy( true )
+    @bucket.delete!
   end
   
   def test_upload
@@ -29,7 +28,7 @@ class S3Test < Test::Unit::TestCase
     
     assert_equal(
       File.read( "#{FIXTURES_PATH}/file.txt" ),
-      SweetyBacky::S3.object( "test/path/file.txt", @opts ).content
+      SweetyBacky::S3.object( "test/path/file.txt", @opts ).read
     )
   end
   
@@ -54,8 +53,8 @@ class S3Test < Test::Unit::TestCase
     
     SweetyBacky::S3.delete( "test/path/file2.txt", @opts )
     
-    assert( @bucket.object( "test/path/file1.txt" ).exists? )
-    assert( !@bucket.object( "test/path/file2.txt" ).exists? )
+    assert( @bucket.objects[ "test/path/file1.txt" ].exists? )
+    assert( !@bucket.objects[ "test/path/file2.txt" ].exists? )
   end
   
 end

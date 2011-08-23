@@ -26,13 +26,12 @@ class RunnerS3Test < Test::Unit::TestCase
     @runner = SweetyBacky::Runner.new
     @runner.config( @opts )
     
-    s3 = ::S3::Service.new( SweetyBacky::S3.read_s3_password( @opts[:s3_opts][:passwd_file] ) )
-    @bucket = s3.buckets.build( @opts[:s3_opts][:bucket] )
-    @bucket.save
+    s3 = AWS::S3.new( SweetyBacky::S3.read_s3_password( @opts[:s3_opts][:passwd_file] ) )
+    @bucket = s3.buckets.create( @opts[:s3_opts][:bucket] )
   end
 
   def teardown
-    @bucket.destroy( true )
+    @bucket.delete!
   end
   
   def test_do_backup_daily
@@ -42,30 +41,30 @@ class RunnerS3Test < Test::Unit::TestCase
     
     assert( 
       @bucket.
-        object( 
+        objects[ 
           "test/path/files/#{SweetyBacky::Utils.namerize( @opts[:paths][0] )}.#{Date.today.strftime('%Y%m%d')}.daily.tar.gz"
-        ).exists? 
+        ].exists? 
     )
     
     assert( 
       @bucket.
-        object( 
+        objects[ 
           "test/path/databases/test.#{Date.today.strftime('%Y%m%d')}.daily.sql.tar.gz"
-        ).exists? 
+        ].exists? 
     )
     
     assert( 
       @bucket.
-        object( 
+        objects[ 
           "test/path/files/#{SweetyBacky::Utils.namerize( @opts[:paths][0] )}.#{Date.today.strftime('%Y%m%d')}.daily.tar.gz.md5"
-        ).exists? 
+        ].exists? 
     )
     
     assert( 
       @bucket.
-        object( 
+        objects[ 
           "test/path/databases/test.#{Date.today.strftime('%Y%m%d')}.daily.sql.tar.gz.md5"
-        ).exists? 
+        ].exists? 
     )
   end
     
