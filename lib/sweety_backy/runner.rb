@@ -29,8 +29,10 @@ module SweetyBacky
       
       if( @opts[:storage_system].to_sym == :s3 )
         @opts[:working_path] = File.join( Dir::tmpdir, "sweety_backy_#{Time.now.to_i}" )
+        @opts[:target_path]  = @opts[:s3_opts][:path]
       else
         @opts[:working_path] = @opts[:local_opts][:path]
+        @opts[:target_path]  = @opts[:local_opts][:path]
       end
     end
     
@@ -126,13 +128,13 @@ module SweetyBacky
     def upload_databases_backup_to_s3( backup_path, md5_path )
       SweetyBacky::S3.upload(
         backup_path,
-        "#{@opts[:s3_opts][:path]}/databases/#{File.basename( backup_path )}",
+        "#{@opts[:target_path]}/databases/#{File.basename( backup_path )}",
         @opts[:s3_opts]
       )
     
       SweetyBacky::S3.upload(
         md5_path,
-        "#{@opts[:s3_opts][:path]}/databases/#{File.basename( md5_path )}",
+        "#{@opts[:target_path]}/databases/#{File.basename( md5_path )}",
         @opts[:s3_opts]
       )
     
@@ -143,13 +145,13 @@ module SweetyBacky
     def upload_files_backup_to_s3( backup_path, md5_path )
       SweetyBacky::S3.upload(
         backup_path,
-        "#{@opts[:s3_opts][:path]}/files/#{File.basename( backup_path )}",
+        "#{@opts[:target_path]}/files/#{File.basename( backup_path )}",
         @opts[:s3_opts]
       )
     
       SweetyBacky::S3.upload(
         md5_path,
-        "#{@opts[:s3_opts][:path]}/files/#{File.basename( md5_path )}",
+        "#{@opts[:target_path]}/files/#{File.basename( md5_path )}",
         @opts[:s3_opts]
       )
     

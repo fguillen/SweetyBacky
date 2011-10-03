@@ -100,6 +100,8 @@ class RunnerTest < Test::Unit::TestCase
     assert_equal( 4, runner.opts[:daily] )
     assert_equal( :local, runner.opts[:storage_system] )
     assert_equal( '/local/path', runner.opts[:local_opts][:path] )
+    assert_equal( '/local/path', runner.opts[:working_path] )
+    assert_equal( '/local/path', runner.opts[:target_path] )
   end
     
 end

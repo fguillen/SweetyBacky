@@ -27,36 +27,46 @@ module SweetyBacky
     end
   
     def self.clean_files( opts )
-      SweetyBacky::Utils.log "cleaning files on #{opts[:working_path]}/files/"
+      SweetyBacky::Utils.log "cleaning files on #{opts[:target_path]}/files/"
       
       opts[:paths].each do |path|
         SweetyBacky::Utils.log "cleaning file #{path}"
         
         [:yearly, :monthly, :weekly, :daily].each do |period|
           paths_in( 
-            "#{opts[:working_path]}/files/#{SweetyBacky::Utils.namerize( path )}.*.#{period.to_s}.tar.gz",
+            "#{opts[:target_path]}/files/#{SweetyBacky::Utils.namerize( path )}.*.#{period.to_s}.tar.gz",
             opts
           ).sort[0..(-1*(opts[period]+1))].each do |file_path|
             remove_path( file_path, opts )
+            remove_path( "#{file_path}.md5", opts ) if exists?( "#{file_path}.md5", opts )
           end      
         end
       end
     end
     
     def self.clean_databases( opts )
-      SweetyBacky::Utils.log "cleaning databases on #{opts[:working_path]}/databases/"
+      SweetyBacky::Utils.log "cleaning databases on #{opts[:target_path]}/databases/"
       
       opts[:databases].each do |database_name|
         SweetyBacky::Utils.log "cleaning database #{database_name}"
         
         [:yearly, :monthly, :weekly, :daily].each do |period|
           paths_in( 
-            "#{opts[:working_path]}/databases/#{database_name}.*.#{period.to_s}.sql.tar.gz",
+            "#{opts[:target_path]}/databases/#{database_name}.*.#{period.to_s}.sql.tar.gz",
             opts
           ).sort[0..(-1*(opts[period]+1))].each do |file_path|
             remove_path( file_path, opts )
+            remove_path( "#{file_path}.md5", opts ) if exists?( "#{file_path}.md5", opts )
           end      
         end
+      end
+    end
+    
+    def self.exists?( path, opts )
+      if( opts[:storage_system].to_sym == :s3 )
+        return SweetyBacky::S3.exists?( path, opts[:s3_opts] )
+      else
+        return File.exists?( path )
       end
     end
     

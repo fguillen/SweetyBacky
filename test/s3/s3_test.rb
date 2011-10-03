@@ -57,4 +57,10 @@ class S3Test < Test::Unit::TestCase
     assert( !@bucket.objects[ "test/path/file2.txt" ].exists? )
   end
   
+  def test_exists
+    SweetyBacky::S3.upload( "#{FIXTURES_PATH}/file.txt", "test/path/file1.txt", @opts )
+    assert_equal( true, SweetyBacky::S3.exists?( "test/path/file1.txt", @opts ) )
+    assert_equal( false, SweetyBacky::S3.exists?( "test/path/file2.txt", @opts ) )
+  end
+  
 end

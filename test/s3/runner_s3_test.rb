@@ -67,6 +67,30 @@ class RunnerS3Test < Test::Unit::TestCase
         ].exists? 
     )
   end
+  
+  def test_initialize_with_config_file
+    SweetyBacky::OptsReader.expects( :read_opts ).with( '/path/config.yml' ).returns( 
+      { 
+        :paths => [ 'pepe', 'juan' ],
+        :storage_system => :s3,
+        :s3_opts => {
+          :path => '/s3/path'
+        }
+      }
+    )
+    
+    runner = SweetyBacky::Runner.new( "/path/config.yml" )
+    
+    assert_equal( [ "pepe", "juan" ], runner.opts[:paths] )
+    assert_equal( [], runner.opts[:databases] )
+    assert_equal( 1, runner.opts[:yearly] )
+    assert_equal( 1, runner.opts[:monthly] )
+    assert_equal( 2, runner.opts[:weekly] )
+    assert_equal( 4, runner.opts[:daily] )
+    assert_equal( :s3, runner.opts[:storage_system] )
+    assert_equal( '/s3/path', runner.opts[:s3_opts][:path] )
+    assert_equal( '/s3/path', runner.opts[:target_path] )
+  end
     
 end
 

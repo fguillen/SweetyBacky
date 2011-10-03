@@ -18,7 +18,8 @@ class CommanderS3Test < Test::Unit::TestCase
         :path         => 'test/path',
         :passwd_file  => '~/.s3.passwd'
       },
-      :working_path => @tmp_dir
+      :working_path => @tmp_dir,
+      :target_path  => 'test/path'
     }
     
     s3 = AWS::S3.new( SweetyBacky::S3.read_s3_password( @opts[:s3_opts][:passwd_file] ) )

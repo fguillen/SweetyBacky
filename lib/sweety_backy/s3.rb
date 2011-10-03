@@ -22,15 +22,19 @@ module SweetyBacky
       object
     end
     
+    def self.exists?( path, opts )
+      return object( path, opts ).exists?
+    end
+    
     def self.paths_in( path, opts )
       s3 = AWS::S3.new( read_s3_password( opts[:passwd_file] ) )
       bucket = s3.buckets[ opts[:bucket] ]
       
       regex = Regexp.escape( path ).gsub('\*', '.*').gsub('\?', '.')
-      
-      objects = bucket.objects.select { |e| e.key =~ /#{regex}/ }
-      paths = objects.map(&:key)
-      
+
+      objects = bucket.objects.select { |e| e.key =~ /^#{regex}$/ }
+      paths   = objects.map(&:key)
+
       return paths
     end
     

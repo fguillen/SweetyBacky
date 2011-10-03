@@ -56,7 +56,8 @@ class CommanderTest < Test::Unit::TestCase
       :local_opts => {
         :path => @tmp_dir
       },
-      :working_path => @tmp_dir
+      :working_path => @tmp_dir,
+      :target_path  => @tmp_dir
     }
     
     Dir.mkdir( "#{@tmp_dir}/files" )  unless File.exists?( "#{@tmp_dir}/files" )
@@ -92,7 +93,7 @@ class CommanderTest < Test::Unit::TestCase
     
     SweetyBacky::Commander.clean( opts )
     
-    files_keeped = Dir.glob( "#{@tmp_dir}/files/*" ).join( "\n" )
+    files_keeped     = Dir.glob( "#{@tmp_dir}/files/*" ).join( "\n" )
     databases_keeped = Dir.glob( "#{@tmp_dir}/databases/*" ).join( "\n" )
     
     # files to keep
