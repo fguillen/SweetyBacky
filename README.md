@@ -83,31 +83,43 @@ It is a _yaml_ file with two keys with the S3 credentials:
 
 This will generate a bunch of backups in the _sweety_backy_ bucket like these ones:
 
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110626.weekly.part0.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110626.weekly.part1.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110626.weekly.part2.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110703.weekly.part0.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110703.weekly.part1.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110703.weekly.part2.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110704.daily.part0.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110704.daily.part1.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110704.daily.part2.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110705.daily.part0.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110705.daily.part1.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110705.daily.part2.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110706.daily.part0.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110706.daily.part1.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110706.daily.part2.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110707.daily.part0.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110707.daily.part1.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110707.daily.part2.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110626.weekly.tar.gz.part_aa
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110626.weekly.tar.gz.part_ab
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110626.weekly.tar.gz.part_ac
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110626.weekly.tar.gz.md5
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110703.weekly.tar.gz.part_aa
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110703.weekly.tar.gz.part_ab
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110703.weekly.tar.gz.part_ac
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110703.weekly.tar.gz.md5
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110704.daily.tar.gz.part_aa
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110704.daily.tar.gz.part_ab
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110704.daily.tar.gz.part_ac
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110704.daily.tar.gz.md5
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110705.daily.tar.gz.part_aa
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110705.daily.tar.gz.part_ab
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110705.daily.tar.gz.part_ac
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110705.daily.tar.gz.md5
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110706.daily.tar.gz.part_aa
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110706.daily.tar.gz.part_ab
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110706.daily.tar.gz.part_ac
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110706.daily.tar.gz.md5
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110707.daily.tar.gz.part_aa
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110707.daily.tar.gz.part_ab
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110707.daily.tar.gz.part_ac
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Arduino.20110707.daily.tar.gz.md5
 
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110626.weekly.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110703.weekly.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110704.daily.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110705.daily.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110706.daily.tar.gz
-    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110707.daily.tar.gz
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110626.weekly.tar.gz.part_aa
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110626.weekly.tar.gz.md5
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110703.weekly.tar.gz.part_aa
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110703.weekly.tar.gz.md5
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110704.daily.tar.gz.part_aa
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110704.daily.tar.gz.md5
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110705.daily.tar.gz.part_aa
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110705.daily.tar.gz.md5
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110706.daily.tar.gz.part_aa
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110706.daily.tar.gz.md5
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110707.daily.tar.gz.part_aa
+    https://s3.amazonaws.com/sweety_backy/fguillen/files/Users.fguillen.Develop.Brico.20110707.daily.tar.gz.md5
 
     https://s3.amazonaws.com/sweety_backy/fguillen/databases/test.20110626.weekly.sql.tar.gz
     https://s3.amazonaws.com/sweety_backy/fguillen/databases/test.20110703.weekly.sql.tar.gz
@@ -129,6 +141,10 @@ This will generate a bunch of backups in the _sweety_backy_ bucket like these on
 
     # every day at 02:00 am
     00 02 * * * sweety_backy /home/fguillen/.sweety_backy.conf >> /var/log/sweety_backy.log 2>&1
+
+### State of development
+
+I'm using it in my prouduction servers, but it can fails and damage your data.. use it at your own risk.
 
 ## License
 
