@@ -1,11 +1,11 @@
 begin
-  require 'aws-sdk'
+  require "aws-sdk"
 rescue LoadError
-  require 'rubygems'
-  require 'aws-sdk'
+  require "rubygems"
+  require "aws-sdk"
 end
 
-require 'digest/md5'
+require "digest/md5"
 
 require "#{File.dirname(__FILE__)}/sweety_backy/version"
 require "#{File.dirname(__FILE__)}/sweety_backy/runner"

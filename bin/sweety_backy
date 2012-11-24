@@ -4,23 +4,23 @@
 #     sweety_backy /path/to/sweety_backy.conf
 
 begin
-  require 'sweety_backy'
+  require "sweety_backy"
 rescue LoadError
-  require 'rubygems'
-  require 'sweety_backy'
+  require "rubygems"
+  require "sweety_backy"
 end
 
-require 'benchmark'
+require "benchmark"
 
 if( ARGV[0].nil? )
   SweetyBacky::Utils.log "use: $ sweety_backy <config_file_path>"
   exit 1
 end
 
-lapsus_time = 
+lapsus_time =
   Benchmark.realtime do
     SweetyBacky::Utils.log "--------------------"
-    SweetyBacky::Utils.log "Starting SweetyBacky"
+    SweetyBacky::Utils.log "Starting SweetyBacky v #{SweetyBacky::VERSION}"
     sb = SweetyBacky::Runner.new( ARGV[0] )
     sb.run
   end

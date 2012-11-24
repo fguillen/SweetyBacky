@@ -12,13 +12,13 @@ Gem::Specification.new do |s|
   s.description = "Simple mechanism to configure and execute backups of folders and MySQL DBs and store them in local folder or S3 bucket"
 
   s.rubyforge_project = "SweetyBacky"
-  
+
   s.add_development_dependency "bundler", ">= 1.0.0.rc.6"
   s.add_development_dependency "mocha"
   s.add_development_dependency "delorean"
   s.add_development_dependency "rake"
-  
-  s.add_dependency "aws-sdk"
+
+  s.add_dependency "aws-sdk", "1.7.1"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
