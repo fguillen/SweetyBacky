@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sweety_backy (0.0.21)
+    sweety_backy (0.0.25)
       aws-sdk (= 1.7.1)
 
 GEM
