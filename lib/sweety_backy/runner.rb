@@ -145,7 +145,7 @@ module SweetyBacky
     def upload_files_backup_to_s3( backup_path, md5_path )
       backup_paths = opts[:slices_size] ? Dir.glob( "#{backup_path}.part_*" ) : [backup_path]
 
-      backup_paths.each do |backup_path|
+      backup_paths.sort.each do |backup_path|
         SweetyBacky::S3.upload(
           backup_path,
           "#{@opts[:target_path]}/files/#{File.basename( backup_path )}",

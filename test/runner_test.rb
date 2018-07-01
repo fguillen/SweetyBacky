@@ -1,6 +1,6 @@
-require "#{File.dirname(__FILE__)}/test_helper"
+require_relative "test_helper"
 
-class RunnerTest < Test::Unit::TestCase
+class RunnerTest < Minitest::Test
 
   def setup
     SweetyBacky::Utils.stubs(:log)
@@ -27,6 +27,7 @@ class RunnerTest < Test::Unit::TestCase
 
     @runner = SweetyBacky::Runner.new
     @runner.config( @opts )
+
   end
 
   def teardown
@@ -138,8 +139,6 @@ class RunnerTest < Test::Unit::TestCase
       "#{FIXTURES_PATH}/slices/file1.txt",
       "#{FIXTURES_PATH}/slices/file1.txt.md5"
     )
-
-
 
     # FileUtils.expects(:rm).with()
   end

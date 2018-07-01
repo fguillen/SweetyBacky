@@ -1,7 +1,7 @@
 require "#{File.dirname(__FILE__)}/../test_helper"
 
 
-class S3Test < Test::Unit::TestCase
+class S3Test < Minitest::Test
   def setup
     SweetyBacky::Utils.stubs(:log)
 

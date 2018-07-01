@@ -1,10 +1,10 @@
 require "#{File.dirname(__FILE__)}/../test_helper"
 
-class RunnerS3Test < Test::Unit::TestCase
-  
+class RunnerS3Test < Minitest::Test
+
   def setup
     SweetyBacky::Utils.stubs(:log)
-    
+
     # runner
     @opts = {
       :paths          => [ "#{FIXTURES_PATH}/path" ],
@@ -22,10 +22,10 @@ class RunnerS3Test < Test::Unit::TestCase
         :path               => 'test/path'
       }
     }
-    
+
     @runner = SweetyBacky::Runner.new
     @runner.config( @opts )
-    
+
     s3 = AWS::S3.new( SweetyBacky::S3.read_s3_password( @opts[:s3_opts][:passwd_file] ) )
     @bucket = s3.buckets.create( @opts[:s3_opts][:bucket] )
   end
@@ -33,44 +33,44 @@ class RunnerS3Test < Test::Unit::TestCase
   def teardown
     @bucket.delete!
   end
-  
+
   def test_do_backup_daily
     SweetyBacky::Utils.stubs( :period ).returns( 'daily' )
-    
+
     @runner.do_backup
-    
-    assert( 
+
+    assert(
       @bucket.
-        objects[ 
+        objects[
           "test/path/files/#{SweetyBacky::Utils.namerize( @opts[:paths][0] )}.#{Date.today.strftime('%Y%m%d')}.daily.tar.gz"
-        ].exists? 
+        ].exists?
     )
-    
-    assert( 
+
+    assert(
       @bucket.
-        objects[ 
+        objects[
           "test/path/databases/test.#{Date.today.strftime('%Y%m%d')}.daily.sql.tar.gz"
-        ].exists? 
+        ].exists?
     )
-    
-    assert( 
+
+    assert(
       @bucket.
-        objects[ 
+        objects[
           "test/path/files/#{SweetyBacky::Utils.namerize( @opts[:paths][0] )}.#{Date.today.strftime('%Y%m%d')}.daily.tar.gz.md5"
-        ].exists? 
+        ].exists?
     )
-    
-    assert( 
+
+    assert(
       @bucket.
-        objects[ 
+        objects[
           "test/path/databases/test.#{Date.today.strftime('%Y%m%d')}.daily.sql.tar.gz.md5"
-        ].exists? 
+        ].exists?
     )
   end
-  
+
   def test_initialize_with_config_file
-    SweetyBacky::OptsReader.expects( :read_opts ).with( '/path/config.yml' ).returns( 
-      { 
+    SweetyBacky::OptsReader.expects( :read_opts ).with( '/path/config.yml' ).returns(
+      {
         :paths => [ 'pepe', 'juan' ],
         :storage_system => :s3,
         :s3_opts => {
@@ -78,9 +78,9 @@ class RunnerS3Test < Test::Unit::TestCase
         }
       }
     )
-    
+
     runner = SweetyBacky::Runner.new( "/path/config.yml" )
-    
+
     assert_equal( [ "pepe", "juan" ], runner.opts[:paths] )
     assert_equal( [], runner.opts[:databases] )
     assert_equal( 1, runner.opts[:yearly] )
@@ -91,6 +91,6 @@ class RunnerS3Test < Test::Unit::TestCase
     assert_equal( '/s3/path', runner.opts[:s3_opts][:path] )
     assert_equal( '/s3/path', runner.opts[:target_path] )
   end
-    
+
 end
 

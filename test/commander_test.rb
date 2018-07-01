@@ -1,6 +1,6 @@
-require "#{File.dirname(__FILE__)}/test_helper"
+require_relative "test_helper"
 
-class CommanderTest < Test::Unit::TestCase
+class CommanderTest < Minitest::Test
 
   def setup
     SweetyBacky::Utils.stubs(:log)
@@ -43,6 +43,49 @@ class CommanderTest < Test::Unit::TestCase
     assert_match( /\sback.sql$/, result )
   end
 
+  def test_do_databases_backup_mysql_parameters
+    SweetyBacky::Utils.stubs(:command)
+    SweetyBacky::Commander.expects(:tmp_sql_file_path).returns("TMP_SQL_FILE_PATH").at_least_once
+    FileUtils.expects(:mkdir_p).at_least_once
+    File.expects(:delete).at_least_once
+
+    # Basic params
+    SweetyBacky::Utils.expects(:command).with("mysqldump   -utest  test > TMP_SQL_FILE_PATH")
+    SweetyBacky::Commander.do_database_backup(
+      "test",
+      "#{@tmp_dir}/back.sql.tar.gz",
+      {
+        :database_user => "test",
+        :database_pass => ""
+      }
+    )
+
+    # With host
+    SweetyBacky::Utils.expects(:command).with("mysqldump -hHOST  -utest  test > TMP_SQL_FILE_PATH")
+    SweetyBacky::Commander.do_database_backup(
+      "test",
+      "#{@tmp_dir}/back.sql.tar.gz",
+      {
+        :database_user => "test",
+        :database_pass => "",
+        :database_host => "HOST"
+      }
+    )
+
+    # With host and port
+    SweetyBacky::Utils.expects(:command).with("mysqldump -hHOST -PPORT -utest  test > TMP_SQL_FILE_PATH")
+    SweetyBacky::Commander.do_database_backup(
+      "test",
+      "#{@tmp_dir}/back.sql.tar.gz",
+      {
+        :database_user => "test",
+        :database_pass => "",
+        :database_host => "HOST",
+        :database_port => "PORT"
+      }
+    )
+
+  end
 
   def test_clean
     opts = {
@@ -126,9 +169,9 @@ class CommanderTest < Test::Unit::TestCase
       'name1.20100704.weekly',
       'name2.20100721.daily'
     ].each do |file_part|
-      assert_no_match( /#{file_part}.tar.gz/, files_keeped )
-      assert_no_match( /#{file_part}.tar.gz.md5/, files_keeped )
-      assert_no_match( /#{file_part}.sql.tar.gz/, databases_keeped )
+      refute_match( /#{file_part}.tar.gz/, files_keeped )
+      refute_match( /#{file_part}.tar.gz.md5/, files_keeped )
+      refute_match( /#{file_part}.sql.tar.gz/, databases_keeped )
     end
   end
 
@@ -217,10 +260,10 @@ class CommanderTest < Test::Unit::TestCase
       'name1.20100704.weekly',
       'name2.20100721.daily'
     ].each do |file_part|
-      assert_no_match( /#{file_part}.tar.gz.part_aa/, files_keeped )
-      assert_no_match( /#{file_part}.tar.gz.part_ab/, files_keeped )
-      assert_no_match( /#{file_part}.tar.gz.md5/, files_keeped )
-      assert_no_match( /#{file_part}.sql.tar.gz/, databases_keeped )
+      refute_match( /#{file_part}.tar.gz.part_aa/, files_keeped )
+      refute_match( /#{file_part}.tar.gz.part_ab/, files_keeped )
+      refute_match( /#{file_part}.tar.gz.md5/, files_keeped )
+      refute_match( /#{file_part}.sql.tar.gz/, databases_keeped )
     end
   end
 

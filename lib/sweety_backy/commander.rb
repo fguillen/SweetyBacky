@@ -11,14 +11,20 @@ module SweetyBacky
       SweetyBacky::Utils.log "doing database backup #{database_name} on #{backup_path}"
 
       FileUtils.mkdir_p( File.dirname( backup_path ) )
-      tmp_sql_file_path = File.join( Dir::tmpdir, "#{File.basename( backup_path, '.tar.gz' )}" )
+      _tmp_sql_file_path = tmp_sql_file_path(backup_path)
 
       database_pass = opts[:database_pass].empty? ? '' : "-p'#{opts[:database_pass]}'"
+      database_host = opts[:database_host].nil? ? '' : "-h#{opts[:database_host]}"
+      database_port = opts[:database_port].nil? ? '' : "-P#{opts[:database_port]}"
 
-      SweetyBacky::Utils::command( "mysqldump -u#{opts[:database_user]} #{database_pass} #{database_name} > #{tmp_sql_file_path}" )
-      SweetyBacky::Utils::command( "tar -cz --same-permissions --file #{backup_path} --directory #{File.dirname(tmp_sql_file_path)} #{File.basename(tmp_sql_file_path)}" )
+      SweetyBacky::Utils::command( "mysqldump #{database_host} #{database_port} -u#{opts[:database_user]} #{database_pass} #{database_name} > #{_tmp_sql_file_path}" )
+      SweetyBacky::Utils::command( "tar -cz --same-permissions --file #{backup_path} --directory #{File.dirname(_tmp_sql_file_path)} #{File.basename(_tmp_sql_file_path)}" )
 
-      File.delete( tmp_sql_file_path )
+      File.delete( _tmp_sql_file_path )
+    end
+
+    def self.tmp_sql_file_path(backup_path)
+      File.join( Dir::tmpdir, "#{File.basename( backup_path, '.tar.gz' )}" )
     end
 
     def self.clean( opts )

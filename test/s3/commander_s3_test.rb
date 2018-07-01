@@ -1,7 +1,7 @@
 require "#{File.dirname(__FILE__)}/../test_helper"
 
-class CommanderS3Test < Test::Unit::TestCase
-  
+class CommanderS3Test < Minitest::Test
+
   def setup
     SweetyBacky::Utils.stubs(:log)
 
@@ -21,9 +21,9 @@ class CommanderS3Test < Test::Unit::TestCase
       :working_path => @tmp_dir,
       :target_path  => 'test/path'
     }
-    
+
     s3 = AWS::S3.new( SweetyBacky::S3.read_s3_password( @opts[:s3_opts][:passwd_file] ) )
-        
+
     @bucket = s3.buckets.create( @opts[:s3_opts][:bucket] )
   end
 
@@ -31,7 +31,7 @@ class CommanderS3Test < Test::Unit::TestCase
     @bucket.delete!
   end
 
-  def test_clean    
+  def test_clean
     [
       'name1.20081231.yearly',
       'name1.20081232.yearly',
@@ -56,12 +56,12 @@ class CommanderS3Test < Test::Unit::TestCase
       SweetyBacky::S3.upload( "#{FIXTURES_PATH}/file.txt", "#{@opts[:s3_opts][:path]}/files/#{file_part}.tar.gz", @opts[:s3_opts] )
       SweetyBacky::S3.upload( "#{FIXTURES_PATH}/file.txt", "#{@opts[:s3_opts][:path]}/databases/#{file_part}.sql.tar.gz", @opts[:s3_opts] )
     end
-    
+
     SweetyBacky::Commander.clean( @opts )
-    
+
     files_keeped = SweetyBacky::S3.paths_in( "#{@opts[:s3_opts][:path]}/files/*", @opts[:s3_opts] ).join( "\n" )
     databases_keeped = SweetyBacky::S3.paths_in( "#{@opts[:s3_opts][:path]}/databases/*", @opts[:s3_opts] ).join( "\n" )
-    
+
     # files to keep
     [
       'name1.20081232.yearly',
@@ -81,7 +81,7 @@ class CommanderS3Test < Test::Unit::TestCase
       assert_match( "#{file_part}.tar.gz", files_keeped )
       assert_match( "#{file_part}.sql.tar.gz", databases_keeped )
     end
-    
+
     # files to deleted
     [
       'name1.20081231.yearly',
@@ -90,11 +90,11 @@ class CommanderS3Test < Test::Unit::TestCase
       'name1.20100704.weekly',
       'name2.20100721.daily'
     ].each do |file_part|
-      assert_no_match( /#{file_part}.tar.gz/, files_keeped )
-      assert_no_match( /#{file_part}.sql.tar.gz/, databases_keeped )
+      refute_match( /#{file_part}.tar.gz/, files_keeped )
+      refute_match( /#{file_part}.sql.tar.gz/, databases_keeped )
     end
   end
 
-    
+
 end
 
