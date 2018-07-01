@@ -2,6 +2,7 @@ require 'rubygems'
 require 'fileutils'
 require 'tmpdir'
 require 'yaml'
+require 'date'
 require File.dirname(__FILE__) + "/utils.rb"
 
 module SweetyBacky
